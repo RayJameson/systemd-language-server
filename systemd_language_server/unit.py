@@ -192,7 +192,11 @@ def get_directives(unit_type: UnitType, section: UnitFileSection | None) -> list
 
 
 def get_unit_type(document):
-    return UnitType(Path(document.uri).suffix.strip("."))
+    unit_types_pattern = "|".join([i.value for i in UnitType])
+    file_extension = Path(document.uri).suffix.removeprefix(".")
+    unit_type_match = re.match(unit_types_pattern, file_extension)
+    unit_type = unit_type_match[0] if unit_type_match else None
+    return UnitType(unit_type)
 
 
 def get_current_section(
